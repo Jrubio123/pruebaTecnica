@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Tareas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="board">
+            <div class="column">
+                <h2>Lista de tareas</h2>
+                <div class="task-list" id="pending">
+                    <!-- Tasks will be added here -->
+                </div>
+                <button onclick="showAddTaskForm('pending')">+ Agregar tarea</button>
+            </div>
+            
+            <div class="column">
+                <h2>Completadas</h2>
+                <div class="task-list" id="completed">
+                    <!-- Completed tasks will be here -->
+                </div>
+            </div>
+            
+            <div class="column">
+                <h2>Aplazadas</h2>
+                <div class="task-list" id="postponed">
+                    <!-- Postponed tasks will be here -->
+                </div>
+            </div>
+            
+            <div class="column">
+                <h2>Rechazadas</h2>
+                <div class="task-list" id="rejected">
+                    <!-- Rejected tasks will be here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <h3>Nueva Tarea</h3>
+            <input type="text" id="taskTitle" placeholder="Título de la tarea">
+            <button onclick="addTask()">Guardar</button>
+            <button onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

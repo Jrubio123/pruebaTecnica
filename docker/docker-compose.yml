@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: ..  # Usa el directorio raíz del proyecto para construir la imagen
+      dockerfile: docker/Dockerfile  # Ruta al Dockerfile
+    container_name: php-container
+    ports:
+      - "80:80"  # Mapea el puerto 80 del contenedor al puerto 80 del host
+    volumes:
+      - ../backend:/var/www/html  # Monta la carpeta backend en el contenedor
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0  # Usa la imagen oficial de MySQL 8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Contraseña del root
+      MYSQL_DATABASE: tasks_db           # Nombre de la base de datos
+      MYSQL_USER: user                   # Usuario de la base de datos
+      MYSQL_PASSWORD: password           # Contraseña del usuario
+    ports:
+      - "3306:3306"  # Mapea el puerto 3306 del contenedor al puerto 3306 del host
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d  # Monta el script de inicialización
