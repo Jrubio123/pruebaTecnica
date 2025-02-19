@@ -8,6 +8,7 @@ class Database {
     private $conn;
 
     public function __construct() {
+        // Cargar variables de entorno (si usas un archivo .env)
         $this->host = getenv('DB_HOST') ?: 'mysql';
         $this->db_name = getenv('DB_DATABASE') ?: 'tasks_db';
         $this->username = getenv('DB_USERNAME') ?: 'user';
@@ -24,9 +25,11 @@ class Database {
                 $this->password
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->exec("set names utf8");
+            $this->conn->exec("set names utf8mb4");  // Usar utf8mb4 para soportar caracteres especiales
         } catch(PDOException $e) {
-            echo "Connection error: " . $e->getMessage();
+            // Loggear el error en lugar de mostrarlo directamente
+            error_log("Connection error: " . $e->getMessage());
+            throw new Exception("Database connection error.");
         }
 
         return $this->conn;
