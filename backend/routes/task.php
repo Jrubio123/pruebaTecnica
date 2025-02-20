@@ -1,59 +1,74 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once '../config/database.php';
+class Task {
+    private $conn;
+    private $table_name = "tasks";
 
-$database = new Database();
-$db = $database->getConnection();
+    public $id;
+    public $title;
+    public $status;
+    public $created_at;
+    public $updated_at;
 
-$method = $_SERVER['REQUEST_METHOD'];
+    public function __construct($db) {
+        $this->conn = $db;
+    }
 
-switch($method) {
-    case 'GET':
-        $stmt = $db->prepare("SELECT * FROM tasks");
+    // Obtener todas las tareas
+    public function getTasks() {
+        $query = "SELECT * FROM " . $this->table_name . " ORDER BY created_at DESC";
+        $stmt = $this->conn->prepare($query);
         $stmt->execute();
-        $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($tasks);
-        break;
+        return $stmt;
+    }
 
-    case 'POST':
-        $data = json_decode(file_get_contents("php://input"));
-        $stmt = $db->prepare("INSERT INTO tasks (title, status) VALUES (:title, :status)");
-        $stmt->bindParam(':title', $data->title);
-        $stmt->bindParam(':status', $data->status);
-        
-        if($stmt->execute()) {
-            echo json_encode(["message" => "Task created successfully"]);
-        } else {
-            echo json_encode(["message" => "Unable to create task"]);
-        }
-        break;
+    // Crear una nueva tarea
+    public function createTask() {
+        $query = "INSERT INTO " . $this->table_name . " (title, status) VALUES (:title, :status)";
 
-    case 'PUT':
-        $data = json_decode(file_get_contents("php://input"));
-        $stmt = $db->prepare("UPDATE tasks SET status = :status WHERE id = :id");
-        $stmt->bindParam(':status', $data->status);
-        $stmt->bindParam(':id', $data->id);
+        $stmt = $this->conn->prepare($query);
         
-        if($stmt->execute()) {
-            echo json_encode(["message" => "Task updated successfully"]);
-        } else {
-            echo json_encode(["message" => "Unable to update task"]);
-        }
-        break;
+        // Limpieza y validación de datos
+        $this->title = htmlspecialchars(strip_tags($this->title));
+        $this->status = htmlspecialchars(strip_tags($this->status));
+        
+        $stmt->bindParam(":title", $this->title);
+        $stmt->bindParam(":status", $this->status);
 
-    case 'DELETE':
-        $data = json_decode(file_get_contents("php://input"));
-        $stmt = $db->prepare("DELETE FROM tasks WHERE id = :id");
-        $stmt->bindParam(':id', $data->id);
+        return $stmt->execute();
+    }
+
+    // Obtener una sola tarea
+    public function getTaskById() {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $this->id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Actualizar una tarea
+    public function updateTask() {
+        $query = "UPDATE " . $this->table_name . " SET title = :title, status = :status WHERE id = :id";
+
+        $stmt = $this->conn->prepare($query);
         
-        if($stmt->execute()) {
-            echo json_encode(["message" => "Task deleted successfully"]);
-        } else {
-            echo json_encode(["message" => "Unable to delete task"]);
-        }
-        break;
+        // Limpieza y validación de datos
+        $this->title = htmlspecialchars(strip_tags($this->title));
+        $this->status = htmlspecialchars(strip_tags($this->status));
+        
+        $stmt->bindParam(":title", $this->title);
+        $stmt->bindParam(":status", $this->status);
+        $stmt->bindParam(":id", $this->id);
+
+        return $stmt->execute();
+    }
+
+    // Eliminar una tarea
+    public function deleteTask() {
+        $query = "DELETE FROM " . $this->table_name . " WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $this->id);
+        return $stmt->execute();
+    }
 }

@@ -7,45 +7,30 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="board">
-            <div class="column">
-                <h2>Lista de tareas</h2>
-                <div class="task-list" id="pending">
-                    <!-- Tasks will be added here -->
-                </div>
-                <button onclick="showAddTaskForm('pending')">+ Agregar tarea</button>
-            </div>
-            
-            <div class="column">
-                <h2>Completadas</h2>
-                <div class="task-list" id="completed">
-                    <!-- Completed tasks will be here -->
-                </div>
-            </div>
-            
-            <div class="column">
-                <h2>Aplazadas</h2>
-                <div class="task-list" id="postponed">
-                    <!-- Postponed tasks will be here -->
-                </div>
-            </div>
-            
-            <div class="column">
-                <h2>Rechazadas</h2>
-                <div class="task-list" id="rejected">
-                    <!-- Rejected tasks will be here -->
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div id="addTaskModal" class="modal">
-        <div class="modal-content">
-            <h3>Nueva Tarea</h3>
-            <input type="text" id="taskTitle" placeholder="Título de la tarea">
-            <button onclick="addTask()">Guardar</button>
-            <button onclick="closeModal()">Cancelar</button>
+    <h1>Gestor de Tareas</h1>
+
+    <form id="taskForm">
+        <input type="text" id="taskTitle" placeholder="Nueva tarea" required>
+        <button type="submit">Agregar</button>
+    </form>
+
+    <div class="task-container">
+        <div class="task-column" id="pendiente">
+            <h2>Pendientes</h2>
+            <ul class="task-list" id="taskListPendiente"></ul>
+        </div>
+        <div class="task-column" id="completada">
+            <h2>Completadas</h2>
+            <ul class="task-list" id="taskListCompletada"></ul>
+        </div>
+        <div class="task-column" id="aplazada">
+            <h2>Aplazadas</h2>
+            <ul class="task-list" id="taskListAplazada"></ul>
+        </div>
+        <div class="task-column" id="rechazada">
+            <h2>Rechazadas</h2>
+            <ul class="task-list" id="taskListRechazada"></ul>
         </div>
     </div>
 

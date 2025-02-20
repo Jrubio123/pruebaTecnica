@@ -24,4 +24,4 @@ services:
     ports:
       - "3306:3306"  # Mapea el puerto 3306 del contenedor al puerto 3306 del host
     volumes:
-       - ./docker/mysql/initdb:/docker-entrypoint-initdb.d
+       - ../docker/mysql/init:/docker-entrypoint-initdb.d
