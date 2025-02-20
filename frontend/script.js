@@ -52,8 +52,17 @@ async function loadTasks() {
 }
 
 async function deleteTask(id) {
-    await fetch(`http://localhost?id=${id}`, { method: "DELETE" });
-    loadTasks();
+    const response = await fetch("http://localhost", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
+    });
+
+    if (response.ok) {
+        loadTasks(); // Recargar lista
+    } else {
+        console.error("Error eliminando tarea");
+    }
 }
 
 function addDragAndDrop() {
